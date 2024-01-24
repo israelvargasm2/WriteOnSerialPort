@@ -18,12 +18,6 @@ namespace ConsoleApp1.Services
                 return;
             }
 
-            Console.Write("Puertos encontrados: ");
-            foreach (string portName in portNames)
-            {
-                Console.Write($"{portName} ");
-            }
-
             SerialPort serialPort = CreateSerialPortInstance(portNames[0], 9600);
 
             try
@@ -44,13 +38,19 @@ namespace ConsoleApp1.Services
             }
             finally
             {
-                serialPort.Close();
+                if (serialPort.IsOpen) serialPort.Close();
             }
         }
 
-        private static string[] GetPortNames()
+        public static string[] GetPortNames()
         {
-            return SerialPort.GetPortNames();
+            string[] portNames = SerialPort.GetPortNames();
+            Console.Write("Puertos encontrados: ");
+            foreach (string portName in portNames)
+            {
+                Console.Write($"{portName} ");
+            }
+            return portNames;
         }
 
         private static SerialPort CreateSerialPortInstance(string portName, int baudRate)
